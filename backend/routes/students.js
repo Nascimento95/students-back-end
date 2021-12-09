@@ -2,12 +2,11 @@ const express = require("express")
 const app = express()
 
 let students = [{
-    "id":1,
-    "firstName" : "marco",
-    "fullName" :"marco  paulo nascimento pereira",
-    "age" : 32,
-    "address" : "66 rue de la chapelle",
-    "codePostal" : "val d'oise",   
+    id :1,
+    name : "marco",
+    age : 32,
+    email : "marco-pereira@hotmail.fr",
+     
 }]
 
 app.get("/students", (req, res) => {
@@ -15,12 +14,20 @@ app.get("/students", (req, res) => {
 })
 
 app.post("/students", (req, res) => {
-    console.log( "resultat",req.body);
-    const student = {
-        ...req.body,
-        id:students.length +1
+    console.log( "resultat de req",req.body.name);
+    const comparation = students.find( student => student.name === req.body.name)
+    console.log("resultat de mon find=>",comparation);
+    if(comparation){
+        console.log("name deja utiliser");
+        res.status(409).send("name deja utiliser")
+    } else {
+        const student = {
+            id:students.length +1,
+            ...req.body
+        }
+        students = [...students, student]
+        res.json(student)
     }
-    students = [...students, student]
-    res.json(student)
+    
 })
 module.exports = app
